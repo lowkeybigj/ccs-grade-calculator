@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CCS Grade Calculator</title>
+  <style>
+    :root {
+      --bg: #eef3f8;
+      --card: #ffffff;
+      --card-2: #f8fbff;
+      --text: #17212b;
+      --muted: #5f6b7a;
+      --line: #d7e0ea;
+      --accent: #2f6fed;
+      --accent-2: #1f57c8;
+      --good: #18794e;
+      --warn: #b54708;
+      --shadow: 0 10px 30px rgba(23, 33, 43, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 32px 18px 56px;
+      background: linear-gradient(180deg, #f4f8fc 0%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    .page-shell {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #ffffff 0%, #f4f8ff 100%);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 26px 24px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero h1 {
+      margin: 0 0 6px;
+      font-size: 2rem;
+      letter-spacing: -0.03em;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .hero-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .theme-toggle-row {
+      display: flex;
+      justify-content: flex-end;
+      margin: -4px 0 16px;
+    }
+
+    .theme-toggle {
+      min-width: 130px;
+    }
+
+    body.dark {
+      --bg: #0f1722;
+      --card: #182331;
+      --card-2: #1c2a39;
+      --text: #e9f1fb;
+      --muted: #a9b7c8;
+      --line: #2b3b4d;
+      --accent: #5c93ff;
+      --accent-2: #4f84ee;
+      --good: #41c784;
+      --warn: #ffb454;
+      --shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+    }
+
+    body.dark {
+      background: linear-gradient(180deg, #0b1320 0%, var(--bg) 100%);
+    }
+
+    body.dark .hero {
+      background: linear-gradient(135deg, #182434 0%, #14202d 100%);
+    }
+
+    body.dark input,
+    body.dark select,
+    body.dark textarea {
+      background: #13202d;
+      color: var(--text);
+    }
+
+    body.dark .grade-pill,
+    body.dark table {
+      background: #13202d;
+    }
+
+    body.dark th {
+      background: #1a2a39;
+    }
+
+    .section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .section h2,
+    .section h3,
+    .section h4 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .section h2 {
+      font-size: 1.25rem;
+    }
+
+    .section h3 {
+      font-size: 1rem;
+      margin-top: 18px;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    input, select, button, textarea {
+      font: inherit;
+      border-radius: 12px;
+    }
+
+    input, select, textarea {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      padding: 10px 12px;
+      min-height: 42px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: rgba(47, 111, 237, 0.65);
+      box-shadow: 0 0 0 4px rgba(47, 111, 237, 0.12);
+    }
+
+    button {
+      border: 1px solid transparent;
+      background: var(--accent);
+      color: white;
+      padding: 10px 14px;
+      min-height: 42px;
+      font-weight: 600;
+      transition: transform 0.12s ease, background 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 0 6px 18px rgba(47, 111, 237, 0.2);
+    }
+
+    button:hover {
+      background: var(--accent-2);
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .category {
+      border: 1px solid var(--line);
+      padding: 14px;
+      margin-top: 12px;
+      background: var(--card-2);
+      border-radius: 16px;
+    }
+
+    .grade-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 999px;
+      padding: 6px 10px;
+      margin: 6px 6px 0 0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    }
+
+    .warning {
+      color: var(--warn);
+      font-weight: 700;
+    }
+
+    .good {
+      color: var(--good);
+      font-weight: 700;
+    }
+
+    .small {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+      margin-top: 10px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: white;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.95rem;
+    }
+
+    th {
+      background: #f6f9fd;
+      font-weight: 700;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .subtle-box {
+      border: 1px solid var(--line);
+      background: #f8fbff;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      display: none;
+      border-radius: 14px;
+    }
+
+    .notes-box {
+      width: 100%;
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    #gradebookPaste {
+      width: 100%;
+      min-height: 200px;
+      resize: vertical;
+    }
+
+    #weightStatus, #pasteImportOutput, #notesStatus, #lowestSafeOutput, #solverOutput {
+      margin-top: 6px;
+    }
+
+    @media (max-width: 700px) {
+      .theme-toggle-row {
+        justify-content: stretch;
+      }
+
+      .theme-toggle {
+        width: 100%;
+      }
+
+      body {
+        padding: 18px 10px 34px;
+      }
+
+      .hero {
+        padding: 20px 16px;
+      }
+
+      .section {
+        padding: 14px;
+      }
+
+      .hero h1 {
+        font-size: 1.6rem;
+      }
+
+      input, select, textarea, button {
+        width: 100%;
+      }
+
+      .row {
+        align-items: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <div class="hero">
+      <div class="hero-top">
+        <div>
+          <h1>CCS Grade Calculator</h1>
+          <p><strong>Made by Joshua Smith, coded by ChatGPT</strong></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="theme-toggle-row">
+      <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">Dark Mode</button>
+    </div>
+
+  <div class="section">
+    <h2>Class Setup <button onclick="toggleTutorial('classSetupTutorial')">Tutorial</button></h2>
+    <div id="classSetupTutorial" class="small subtle-box">Type a name for your class if you want to save it. Click Save Class to keep it. Load Selected Class brings it back later. Delete Selected Class removes it.</div>
+    <div class="row">
+      <input id="className" placeholder="Class name" />
+      <button onclick="saveClass()">Save Class</button>
+      <button onclick="loadSelectedClass()">Load Selected Class</button>
+      <button onclick="deleteSelectedClass()">Delete Selected Class</button>
+      <select id="savedClasses"></select>
+    </div>
+    <div class="small">Saved locally in your browser.</div>
+  </div>
+
+  <div class="section">
+    <h2>Paste Gradebook Import <button onclick="toggleTutorial('pasteImportTutorial')">Tutorial</button></h2>
+    <div id="pasteImportTutorial" class="small subtle-box">Paste your gradebook text here exactly how it copies from your school page. Missing grades will count as zeroes. Importing will replace your current categories and grades.</div>
+    <div class="row">
+      <textarea id="gradebookPaste" placeholder="Paste your gradebook here" style="width:100%; min-height:180px;"></textarea>
+    </div>
+    <div class="row">
+      <button onclick="importPastedGradebook()">Import Pasted Gradebook</button>
+    </div>
+    <div id="pasteImportOutput" class="small"></div>
+  </div>
+
+  <div class="section">
+    <h2>Add Category <button onclick="toggleTutorial('addCategoryTutorial')">Tutorial</button></h2>
+    <div id="addCategoryTutorial" class="small subtle-box">Make one category for each type of grade, like Assignments, Quizzes, or Tests. Put how much each one is worth. All of them together should equal 100.</div>
+    <div class="row">
+      <input id="categoryName" placeholder="Category name" />
+      <input id="categoryWeight" type="number" step="0.01" placeholder="Weight %" />
+      <button onclick="addCategory()">Add Category</button>
+    </div>
+    <div id="weightStatus"></div>
+  </div>
+
+  <div class="section">
+    <h2>Categories <button onclick="toggleTutorial('categoriesTutorial')">Tutorial</button></h2>
+    <div id="categoriesTutorial" class="small subtle-box">This shows all your categories. Add your grades here using points earned and total points. You can also edit or delete anything here.</div>
+    <div id="categoriesContainer"></div>
+  </div>
+
+  <div class="section">
+    <h2>Grades Notes <button onclick="toggleTutorial('notesTutorial')">Tutorial</button></h2>
+    <div id="notesTutorial" class="small subtle-box">Use this to write notes to yourself, like assumptions you made or grades you changed. These notes save with the class.</div>
+    <div class="row">
+      <textarea id="gradeNotes" class="notes-box" placeholder="Example: assuming i corrected that quiz"></textarea>
+    </div>
+    <div class="row">
+      <button onclick="saveNotes()">Save Notes</button>
+      <button onclick="clearNotes()">Delete All Notes</button>
+    </div>
+    <div id="notesStatus" class="small"></div>
+  </div>
+
+  <div class="section">
+    <h2>Current Grade Summary <button onclick="toggleTutorial('currentSummaryTutorial')">Tutorial</button></h2>
+    <div id="currentSummaryTutorial" class="small subtle-box">This shows your current grade, your letter grade, and how each category is affecting your grade.</div>
+    <div id="currentSummary"></div>
+  </div>
+
+  <div class="section">
+    <h2>Target / Future Grade Solver <button onclick="toggleTutorial('solverTutorial')">Tutorial</button></h2>
+    <div id="solverTutorial" class="small subtle-box">Use this to see what grades you need in the future. Add your upcoming grades, then click Solve.</div>
+    <div class="row">
+      <input id="targetGrade" type="number" step="0.01" placeholder="Target overall grade" />
+    </div>
+
+    <h3>Upcoming Grades <button onclick="toggleTutorial('upcomingTutorial')">Tutorial</button></h3>
+    <div id="upcomingTutorial" class="small subtle-box">Add a slot for each future grade. Choose what category it is in and how many points it is worth. You can name it if you want. You can also check Drop lowest in category if this new grade would replace the lowest grade in that category.</div>
+    <div class="row">
+      <select id="upcomingCategory"></select>
+      <input id="upcomingPoints" type="number" step="0.01" placeholder="Points possible" />
+      <input id="upcomingLabel" placeholder="Optional label" />
+      <label><input id="upcomingDropLowest" type="checkbox" /> Drop lowest in category</label>
+      <button onclick="addUpcoming()">Add Upcoming Grade Slot</button>
+      <button onclick="clearUpcoming()">Clear Upcoming Slots</button>
+    </div>
+    <div id="upcomingList"></div>
+    <div class="row">
+      <button onclick="solveScenario()">Solve</button>
+    </div>
+
+    <h3>Lowest Safe Score <button onclick="toggleTutorial('lowestSafeTutorial')">Tutorial</button></h3>
+    <div id="lowestSafeTutorial" class="small subtle-box">Use this to find the lowest score you can get on one future grade without your class grade dropping below a target. Pick the category, enter the points possible, type the class grade you want to stay above, then click Find Lowest Safe Score.</div>
+    <div class="row">
+      <select id="safeCategory"></select>
+      <input id="safePoints" type="number" step="0.01" placeholder="Points possible" />
+      <label><input id="safeDropLowest" type="checkbox" /> Drop lowest in category</label>
+      <input id="safeTarget" type="number" step="0.01" placeholder="Minimum class grade to stay above" />
+      <button onclick="findLowestSafeScore()">Find Lowest Safe Score</button>
+    </div>
+    <div id="lowestSafeOutput"></div>
+
+    <h3>Solver Results <button onclick="toggleTutorial('solverResultsTutorial')">Tutorial</button></h3>
+    <div id="solverResultsTutorial" class="small subtle-box">This shows your results. It includes best case, worst case, what you need on each grade, and some example score combos.</div>
+    <div id="solverOutput"></div>
+  </div>
+
+  <script>
+    let classData = {
+      className: '',
+      categories: [],
+      upcoming: [],
+      notes: ''
+    };
+
+    function round2(n) {
+      return Math.round((n + Number.EPSILON) * 100) / 100;
+    }
+
+    function toggleTutorial(id) {
+      const box = document.getElementById(id);
+      if (!box) return;
+      box.style.display = box.style.display === 'none' || box.style.display === '' ? 'block' : 'none';
+    }
+
+    function letterGrade(percent) {
+      if (percent === null || isNaN(percent)) return 'N/A';
+      if (percent >= 90) return 'A';
+      if (percent >= 80) return 'B';
+      if (percent >= 70) return 'C';
+      if (percent >= 60) return 'D';
+      return 'F';
+    }
+
+    function totalWeight() {
+      return classData.categories.reduce((sum, c) => sum + Number(c.weight || 0), 0);
+    }
+
+    function categoryTotals(category) {
+      const earned = category.grades.reduce((sum, g) => sum + Number(g.earned), 0);
+      const possible = category.grades.reduce((sum, g) => sum + Number(g.possible), 0);
+      return { earned, possible };
+    }
+
+    function categoryAverage(category) {
+      const totals = categoryTotals(category);
+      if (totals.possible <= 0) return null;
+      return (totals.earned / totals.possible) * 100;
+    }
+
+    function overallAverage(data = classData) {
+      const categoriesWithGrades = data.categories.filter(category => categoryAverage(category) !== null);
+      const total = categoriesWithGrades.reduce((sum, c) => sum + Number(c.weight), 0);
+      if (total <= 0) return null;
+
+      let weighted = 0;
+      for (const category of categoriesWithGrades) {
+        const avg = categoryAverage(category);
+        weighted += avg * (Number(category.weight) / total);
+      }
+      return weighted;
+    }
+
+    function cloneData() {
+      return JSON.parse(JSON.stringify(classData));
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function applyTheme(theme) {
+      const body = document.body;
+      const themeToggle = document.getElementById('themeToggle');
+      const isDark = theme === 'dark';
+      body.classList.toggle('dark', isDark);
+      if (themeToggle) {
+        themeToggle.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+      }
+      localStorage.setItem('ccsGradeCalculatorTheme', theme);
+    }
+
+    function toggleTheme() {
+      const isDark = document.body.classList.contains('dark');
+      applyTheme(isDark ? 'light' : 'dark');
+    }
+
+    function loadTheme() {
+      const savedTheme = localStorage.getItem('ccsGradeCalculatorTheme') || 'light';
+      applyTheme(savedTheme);
+    }
+
+    function renderAll() {
+      renderCategories();
+      renderWeightStatus();
+      renderSummary();
+      renderUpcomingOptions();
+      renderUpcomingList();
+      renderSavedClasses();
+      renderNotes();
+    }
+
+    function renderWeightStatus() {
+      const total = round2(totalWeight());
+      const el = document.getElementById('weightStatus');
+      if (total === 100) {
+        el.innerHTML = `<span class="good">Weights total ${total}%.</span>`;
+      } else {
+        el.innerHTML = `<span class="warning">Weights total ${total}%. They should add up to 100%.</span>`;
+      }
+    }
+
+    function renderCategories() {
+      const container = document.getElementById('categoriesContainer');
+      container.innerHTML = '';
+
+      if (!classData.categories.length) {
+        container.innerHTML = '<p>No categories yet.</p>';
+        return;
+      }
+
+      classData.categories.forEach((category, categoryIndex) => {
+        const avg = categoryAverage(category);
+        const totals = categoryTotals(category);
+        const wrapper = document.createElement('div');
+        wrapper.className = 'category';
+
+        const gradesHtml = category.grades.length
+          ? category.grades.map((grade, gradeIndex) => `
+              <span class="grade-pill">
+                ${round2(grade.earned)}/${round2(grade.possible)}
+                <button onclick="editGrade(${categoryIndex}, ${gradeIndex})">edit</button>
+                <button onclick="deleteGrade(${categoryIndex}, ${gradeIndex})">x</button>
+              </span>
+            `).join('')
+          : '<div>No grades yet.</div>';
+
+        wrapper.innerHTML = `
+          <div class="row">
+            <strong>${escapeHtml(category.name)}</strong>
+            <span>Weight: ${round2(category.weight)}%</span>
+            <span>Category average: ${avg === null ? 'N/A' : round2(avg) + '%'}</span>
+            <span>Points: ${round2(totals.earned)}/${round2(totals.possible)}</span>
+            <button onclick="editCategory(${categoryIndex})">Edit Category</button>
+            <button onclick="deleteCategory(${categoryIndex})">Delete Category</button>
+          </div>
+          <div class="row">
+            <input id="earnedInput_${categoryIndex}" type="number" step="0.01" placeholder="Points earned" />
+            <input id="possibleInput_${categoryIndex}" type="number" step="0.01" placeholder="Points possible" />
+            <button onclick="addGrade(${categoryIndex})">Add Grade</button>
+            <button onclick="showCategoryTutorial(${categoryIndex})">Tutorial</button>
+          </div>
+          <div id="categoryTutorial_${categoryIndex}" class="small subtle-box"></div>
+          <div>${gradesHtml}</div>
+        `;
+
+        container.appendChild(wrapper);
+      });
+    }
+
+    function showCategoryTutorial(categoryIndex) {
+      const category = classData.categories[categoryIndex];
+      const box = document.getElementById(`categoryTutorial_${categoryIndex}`);
+      if (!box) return;
+      const totals = categoryTotals(category);
+      const avg = categoryAverage(category);
+      if (box.style.display === 'none' || box.style.display === '') {
+        box.style.display = 'block';
+        box.innerHTML = `
+          <strong>${escapeHtml(category.name)} Tutorial</strong><br>
+          1. Enter the points you got.<br>
+          2. Enter how many points it was out of.<br>
+          3. Click Add Grade for each one.<br>
+          4. The calculator combines them into one average.<br>
+          5. Right now this category has <strong>${round2(totals.earned)}/${round2(totals.possible)}</strong>${avg === null ? '' : `, which is <strong>${round2(avg)}%</strong>`}.<br>
+          Example: if you got 18 out of 20 on a quiz, enter 18 for points earned and 20 for points possible.
+        `;
+      } else {
+        box.style.display = 'none';
+      }
+    }
+
+    function renderNotes() {
+      const notesBox = document.getElementById('gradeNotes');
+      const status = document.getElementById('notesStatus');
+      if (notesBox) notesBox.value = classData.notes || '';
+      if (status) status.innerHTML = classData.notes ? '<span class="good">Notes loaded for this class.</span>' : '';
+    }
+
+    function saveNotes() {
+      classData.notes = document.getElementById('gradeNotes').value;
+      document.getElementById('notesStatus').innerHTML = '<span class="good">Notes saved for this class.</span>';
+    }
+
+    function clearNotes() {
+      if (!confirm('Delete all notes for this class?')) return;
+      classData.notes = '';
+      document.getElementById('gradeNotes').value = '';
+      document.getElementById('notesStatus').innerHTML = '<span class="good">All notes deleted.</span>';
+    }
+
+    function renderSummary() {
+      const summary = document.getElementById('currentSummary');
+      const overall = overallAverage();
+      const total = round2(totalWeight());
+
+      let html = `<p><strong>Overall grade:</strong> ${overall === null ? 'N/A' : round2(overall) + '%'}</p>`;
+      html += `<p><strong>Letter grade:</strong> ${letterGrade(overall)}</p>`;
+
+      if (total !== 100) {
+        html += `<p class="warning">Your configured weights do not add up to 100%.</p>`;
+      }
+
+      html += `<table>
+        <tr><th>Category</th><th>Weight</th><th>Points</th><th>Category Average</th><th>Weighted Contribution (Current)</th></tr>`;
+
+      const activeCategories = classData.categories.filter(category => categoryAverage(category) !== null);
+      const activeWeightRaw = activeCategories.reduce((sum, category) => sum + Number(category.weight), 0);
+
+      for (const category of classData.categories) {
+        const avg = categoryAverage(category);
+        const totals = categoryTotals(category);
+        const contribution = avg === null || activeWeightRaw <= 0 ? 0 : avg * (category.weight / activeWeightRaw);
+        html += `<tr>
+          <td>${escapeHtml(category.name)}</td>
+          <td>${round2(category.weight)}%</td>
+          <td>${round2(totals.earned)}/${round2(totals.possible)}</td>
+          <td>${avg === null ? 'N/A' : round2(avg) + '%'}</td>
+          <td>${avg === null ? 'Ignored until graded' : round2(contribution)}</td>
+        </tr>`;
+      }
+      html += `</table>`;
+      summary.innerHTML = html;
+    }
+
+    function renderUpcomingOptions() {
+      const upcomingSelect = document.getElementById('upcomingCategory');
+      const safeSelect = document.getElementById('safeCategory');
+      if (upcomingSelect) upcomingSelect.innerHTML = '';
+      if (safeSelect) safeSelect.innerHTML = '';
+
+      classData.categories.forEach((category, index) => {
+        const option1 = document.createElement('option');
+        option1.value = index;
+        option1.textContent = category.name;
+        if (upcomingSelect) upcomingSelect.appendChild(option1);
+
+        const option2 = document.createElement('option');
+        option2.value = index;
+        option2.textContent = category.name;
+        if (safeSelect) safeSelect.appendChild(option2);
+      });
+    }
+
+    function renderUpcomingList() {
+      const container = document.getElementById('upcomingList');
+      container.innerHTML = '';
+      if (!classData.upcoming.length) {
+        container.innerHTML = '<p>No upcoming grade slots yet.</p>';
+        return;
+      }
+      classData.upcoming.forEach((slot, index) => {
+        const div = document.createElement('div');
+        div.className = 'row';
+        div.innerHTML = `
+          <span>${index + 1}. ${escapeHtml(slot.label || ('Slot ' + (index + 1)))} - ${escapeHtml(classData.categories[slot.categoryIndex]?.name || 'Unknown')} - ${round2(slot.possible)} points possible${slot.dropLowest ? ' - drops lowest in category' : ''}</span>
+          <button onclick="editUpcoming(${index})">Edit</button>
+          <button onclick="removeUpcoming(${index})">Remove</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function addCategory() {
+      const name = document.getElementById('categoryName').value.trim();
+      const weight = Number(document.getElementById('categoryWeight').value);
+      if (!name) return alert('Enter a category name.');
+      if (isNaN(weight) || weight <= 0) return alert('Enter a valid weight greater than 0.');
+      classData.categories.push({ name, weight, grades: [] });
+      document.getElementById('categoryName').value = '';
+      document.getElementById('categoryWeight').value = '';
+      renderAll();
+    }
+
+    function editCategory(index) {
+      const category = classData.categories[index];
+      const newName = prompt('Edit category name:', category.name);
+      if (newName === null) return;
+      const newWeight = prompt('Edit category weight:', category.weight);
+      if (newWeight === null) return;
+      const parsedWeight = Number(newWeight);
+      if (!newName.trim() || isNaN(parsedWeight) || parsedWeight <= 0) return alert('Invalid category edit.');
+      category.name = newName.trim();
+      category.weight = parsedWeight;
+      renderAll();
+    }
+
+    function deleteCategory(index) {
+      if (!confirm('Delete this category?')) return;
+      classData.categories.splice(index, 1);
+      classData.upcoming = classData.upcoming
+        .filter(slot => slot.categoryIndex !== index)
+        .map(slot => ({ ...slot, categoryIndex: slot.categoryIndex > index ? slot.categoryIndex - 1 : slot.categoryIndex }));
+      renderAll();
+    }
+
+    function addGrade(categoryIndex) {
+      const earned = Number(document.getElementById(`earnedInput_${categoryIndex}`).value);
+      const possible = Number(document.getElementById(`possibleInput_${categoryIndex}`).value);
+      if (isNaN(earned) || isNaN(possible) || possible <= 0) return alert('Enter valid points earned and points possible.');
+      classData.categories[categoryIndex].grades.push({ earned, possible });
+      document.getElementById(`earnedInput_${categoryIndex}`).value = '';
+      document.getElementById(`possibleInput_${categoryIndex}`).value = '';
+      renderAll();
+    }
+
+    function editGrade(categoryIndex, gradeIndex) {
+      const current = classData.categories[categoryIndex].grades[gradeIndex];
+      const earned = prompt('Edit points earned:', current.earned);
+      if (earned === null) return;
+      const possible = prompt('Edit points possible:', current.possible);
+      if (possible === null) return;
+      const parsedEarned = Number(earned);
+      const parsedPossible = Number(possible);
+      if (isNaN(parsedEarned) || isNaN(parsedPossible) || parsedPossible <= 0) return alert('Invalid grade edit.');
+      classData.categories[categoryIndex].grades[gradeIndex] = { earned: parsedEarned, possible: parsedPossible };
+      renderAll();
+    }
+
+    function deleteGrade(categoryIndex, gradeIndex) {
+      classData.categories[categoryIndex].grades.splice(gradeIndex, 1);
+      renderAll();
+    }
+
+    function addUpcoming() {
+      if (!classData.categories.length) return alert('Add categories first.');
+      const categoryIndex = Number(document.getElementById('upcomingCategory').value);
+      const possible = Number(document.getElementById('upcomingPoints').value);
+      const label = document.getElementById('upcomingLabel').value.trim();
+      const dropLowest = document.getElementById('upcomingDropLowest').checked;
+      if (isNaN(categoryIndex) || isNaN(possible) || possible <= 0) return alert('Pick a category and enter valid points possible.');
+      classData.upcoming.push({ categoryIndex, possible, label, dropLowest });
+      document.getElementById('upcomingPoints').value = '';
+      document.getElementById('upcomingLabel').value = '';
+      document.getElementById('upcomingDropLowest').checked = false;
+      renderAll();
+    }
+
+    function editUpcoming(index) {
+      const slot = classData.upcoming[index];
+      const newLabel = prompt('Edit label:', slot.label || '');
+      if (newLabel === null) return;
+      const newPossible = prompt('Edit points possible:', slot.possible);
+      if (newPossible === null) return;
+      const parsedPossible = Number(newPossible);
+      if (isNaN(parsedPossible) || parsedPossible <= 0) return alert('Invalid points possible.');
+      const newDropLowest = confirm('Should this upcoming grade drop the lowest grade in its category? Click OK for yes, Cancel for no.');
+      slot.label = newLabel.trim();
+      slot.possible = parsedPossible;
+      slot.dropLowest = newDropLowest;
+      renderAll();
+    }
+
+    function removeUpcoming(index) {
+      classData.upcoming.splice(index, 1);
+      renderAll();
+    }
+
+    function clearUpcoming() {
+      classData.upcoming = [];
+      renderAll();
+    }
+
+    function applyUpcomingScores(data, earnedArray) {
+      earnedArray.forEach((earned, index) => {
+        const slot = data.upcoming[index];
+        const category = data.categories[slot.categoryIndex];
+        category.grades.push({ earned, possible: slot.possible });
+
+        if (slot.dropLowest && category.grades.length > 1) {
+          let lowestIndex = 0;
+          let lowestPercent = category.grades[0].possible <= 0 ? Infinity : category.grades[0].earned / category.grades[0].possible;
+          for (let i = 1; i < category.grades.length; i++) {
+            const percent = category.grades[i].possible <= 0 ? Infinity : category.grades[i].earned / category.grades[i].possible;
+            if (percent < lowestPercent) {
+              lowestPercent = percent;
+              lowestIndex = i;
+            }
+          }
+          category.grades.splice(lowestIndex, 1);
+        }
+      });
+      return data;
+    }
+
+    function bestCaseOverall() {
+      if (!classData.upcoming.length) return overallAverage();
+      const earnedArray = classData.upcoming.map(slot => slot.possible);
+      return overallAverage(applyUpcomingScores(cloneData(), earnedArray));
+    }
+
+    function worstCaseOverall() {
+      if (!classData.upcoming.length) return overallAverage();
+      const earnedArray = classData.upcoming.map(() => 0);
+      return overallAverage(applyUpcomingScores(cloneData(), earnedArray));
+    }
+
+    function solveUnlockedEqualPercent(target) {
+      let low = 0;
+      let high = 200;
+      let answer = null;
+      let projected = null;
+
+      for (let i = 0; i < 60; i++) {
+        const mid = (low + high) / 2;
+        const earnedArray = classData.upcoming.map(slot => slot.possible * (mid / 100));
+        const overall = overallAverage(applyUpcomingScores(cloneData(), earnedArray));
+        if (overall >= target) {
+          answer = mid;
+          projected = overall;
+          high = mid;
+        } else {
+          low = mid;
+        }
+      }
+
+      return { neededPercent: answer, projectedOverall: projected };
+    }
+
+    function minimumSingleSlotNeeded(target) {
+      const results = [];
+      for (let i = 0; i < classData.upcoming.length; i++) {
+        let low = 0;
+        let high = classData.upcoming[i].possible * 2;
+        let answer = null;
+        for (let step = 0; step < 60; step++) {
+          const mid = (low + high) / 2;
+          const earnedArray = classData.upcoming.map((slot, j) => j === i ? mid : slot.possible);
+          const overall = overallAverage(applyUpcomingScores(cloneData(), earnedArray));
+          if (overall >= target) {
+            answer = mid;
+            high = mid;
+          } else {
+            low = mid;
+          }
+        }
+        results.push({
+          slot: i + 1,
+          label: classData.upcoming[i].label || ('Slot ' + (i + 1)),
+          categoryName: classData.categories[classData.upcoming[i].categoryIndex]?.name || 'Unknown',
+          possible: classData.upcoming[i].possible,
+          neededEarned: answer,
+          neededPercent: answer === null ? null : (answer / classData.upcoming[i].possible) * 100
+        });
+      }
+      return results;
+    }
+
+    function generateSampleCombinations(target) {
+      if (!classData.upcoming.length || classData.upcoming.length > 4) return [];
+      const samples = [];
+      const percents = [50, 60, 70, 75, 80, 85, 90, 95, 100];
+      function backtrack(currentPercents) {
+        if (samples.length >= 16) return;
+        if (currentPercents.length === classData.upcoming.length) {
+          const earnedArray = currentPercents.map((percent, index) => classData.upcoming[index].possible * (percent / 100));
+          const overall = overallAverage(applyUpcomingScores(cloneData(), earnedArray));
+          if (overall >= target) samples.push({ percents: [...currentPercents], overall: round2(overall) });
+          return;
+        }
+        for (const percent of percents) {
+          currentPercents.push(percent);
+          backtrack(currentPercents);
+          currentPercents.pop();
+          if (samples.length >= 16) return;
+        }
+      }
+      backtrack([]);
+      return samples;
+    }
+
+    function importPastedGradebook() {
+      const raw = document.getElementById('gradebookPaste').value;
+      const output = document.getElementById('pasteImportOutput');
+      output.innerHTML = '';
+
+      if (!raw.trim()) {
+        output.innerHTML = '<p class="warning">Paste your gradebook text first.</p>';
+        return;
+      }
+
+      const lines = raw.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+      const importedCategories = [];
+      let currentCategory = null;
+
+      for (const line of lines) {
+        const headerMatch = line.match(/^(.*?)Weight\s*=\s*([0-9]+(?:\.[0-9]+)?)/i);
+        if (headerMatch) {
+          let name = headerMatch[1].trim();
+          const weight = Number(headerMatch[2]);
+          if (/assignments/i.test(name)) name = 'Assignments';
+          else if (/quizzes/i.test(name)) name = 'Quizzes';
+          else if (/tests/i.test(name)) name = 'Tests/Projects';
+          currentCategory = { name, weight, grades: [] };
+          importedCategories.push(currentCategory);
+          continue;
+        }
+
+        if (!currentCategory) continue;
+        if (/^Assignment\s+Pts\s+Max\s+Avg\s+Status\s+Due/i.test(line)) continue;
+        if (/^Category Average/i.test(line)) continue;
+
+        const statusMatch = line.match(/\b(Valid|Missing)\b/i);
+        if (!statusMatch) continue;
+
+        const status = statusMatch[1].toLowerCase();
+        const statusIndex = line.search(/\b(Valid|Missing)\b/i);
+        const beforeStatus = line.slice(0, statusIndex).trim();
+        const numbers = beforeStatus.match(/\d+(?:\.\d+)?/g) || [];
+
+        let earned = null;
+        let possible = null;
+
+        if (status === 'missing') {
+          if (numbers.length >= 1) {
+            possible = Number(numbers[numbers.length - 1]);
+            earned = 0;
+          }
+        } else {
+          if (numbers.length >= 3) {
+            earned = Number(numbers[numbers.length - 3]);
+            possible = Number(numbers[numbers.length - 2]);
+          }
+        }
+
+        if (earned !== null && possible !== null && !isNaN(earned) && !isNaN(possible) && possible > 0) {
+          currentCategory.grades.push({ earned, possible });
+        }
+      }
+
+      if (!importedCategories.length) {
+        output.innerHTML = '<p class="warning">No categories were found in the pasted text.</p>';
+        return;
+      }
+
+      classData.categories = importedCategories;
+      classData.upcoming = [];
+      renderAll();
+
+      const gradeCount = importedCategories.reduce((sum, category) => sum + category.grades.length, 0);
+      output.innerHTML = `<p class="good">Imported ${importedCategories.length} categories and ${gradeCount} grades. Missing grades were counted as zeroes.</p>`;
+    }
+
+    function saveClass() {
+      saveNotes();
+      const className = document.getElementById('className').value.trim();
+      if (!className) return alert('Enter a class name first.');
+      classData.className = className;
+      const all = getSavedClasses();
+      all[className] = cloneData();
+      localStorage.setItem('gradeCalculatorClasses', JSON.stringify(all));
+      renderSavedClasses();
+      alert('Class saved.');
+    }
+
+    function loadSelectedClass() {
+      const selected = document.getElementById('savedClasses').value;
+      if (!selected) return alert('Pick a saved class.');
+      const all = getSavedClasses();
+      if (!all[selected]) return alert('Saved class not found.');
+      classData = all[selected];
+      if (!classData.notes) classData.notes = '';
+      document.getElementById('className').value = classData.className || '';
+      document.getElementById('solverOutput').innerHTML = '';
+      document.getElementById('lowestSafeOutput').innerHTML = '';
+      renderAll();
+    }
+
+    function deleteSelectedClass() {
+      const selected = document.getElementById('savedClasses').value;
+      if (!selected) return alert('Pick a saved class.');
+      if (!confirm(`Delete saved class "${selected}"?`)) return;
+      const all = getSavedClasses();
+      delete all[selected];
+      localStorage.setItem('gradeCalculatorClasses', JSON.stringify(all));
+      renderSavedClasses();
+    }
+
+    function getSavedClasses() {
+      return JSON.parse(localStorage.getItem('gradeCalculatorClasses') || '{}');
+    }
+
+    function renderSavedClasses() {
+      const select = document.getElementById('savedClasses');
+      const all = getSavedClasses();
+      select.innerHTML = '<option value="">-- saved classes --</option>';
+      Object.keys(all).sort().forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        select.appendChild(option);
+      });
+    }
+
+    function findLowestSafeScore() {
+      const categoryIndex = Number(document.getElementById('safeCategory').value);
+      const possible = Number(document.getElementById('safePoints').value);
+      const target = Number(document.getElementById('safeTarget').value);
+      const dropLowest = document.getElementById('safeDropLowest').checked;
+      const output = document.getElementById('lowestSafeOutput');
+      output.innerHTML = '';
+
+      if (isNaN(categoryIndex) || isNaN(possible) || possible <= 0 || isNaN(target)) {
+        output.innerHTML = '<p class="warning">Enter a category, valid points possible, and a target class grade.</p>';
+        return;
+      }
+
+      const current = overallAverage();
+      if (current === null) {
+        output.innerHTML = '<p class="warning">Add some categories and grades first.</p>';
+        return;
+      }
+
+      let low = 0;
+      let high = possible * 2;
+      let answer = null;
+      let projected = null;
+
+      for (let i = 0; i < 60; i++) {
+        const mid = (low + high) / 2;
+        const data = cloneData();
+        data.upcoming = [{ categoryIndex, possible, label: 'Safe Score Check', dropLowest }];
+        const overall = overallAverage(applyUpcomingScores(data, [mid]));
+
+        if (overall >= target) {
+          answer = mid;
+          projected = overall;
+          high = mid;
+        } else {
+          low = mid;
+        }
+      }
+
+      const dataBest = cloneData();
+      dataBest.upcoming = [{ categoryIndex, possible, label: 'Safe Score Check', dropLowest }];
+      const bestPossible = overallAverage(applyUpcomingScores(dataBest, [possible]));
+
+      if (bestPossible < target) {
+        output.innerHTML = `<p class="warning">Even a perfect ${round2(possible)}/${round2(possible)} would not keep you at ${round2(target)}%.</p>`;
+        return;
+      }
+
+      if (answer === null) {
+        output.innerHTML = '<p class="warning">Could not solve this scenario.</p>';
+        return;
+      }
+
+      output.innerHTML = `<p><strong>Lowest safe score:</strong> ${round2(answer)}/${round2(possible)} (${round2((answer / possible) * 100)}%)</p>
+      <p><strong>Projected class grade with that score:</strong> ${round2(projected)}% (${letterGrade(projected)})</p>`;
+    }
+
+    function solveScenario() {
+      const target = Number(document.getElementById('targetGrade').value);
+      const output = document.getElementById('solverOutput');
+      output.innerHTML = '';
+      if (isNaN(target)) return alert('Enter a valid target grade.');
+      const current = overallAverage();
+      if (current === null) {
+        output.innerHTML = '<p class="warning">You need categories first.</p>';
+        return;
+      }
+      if (!classData.upcoming.length) {
+        output.innerHTML = '<p class="warning">Add at least one upcoming grade slot.</p>';
+        return;
+      }
+
+      const best = bestCaseOverall();
+      const worst = worstCaseOverall();
+      const unlockedSolution = solveUnlockedEqualPercent(target);
+      const singleSlot = minimumSingleSlotNeeded(target);
+      const samples = generateSampleCombinations(target);
+
+      let html = `<p><strong>Current overall:</strong> ${round2(current)}% (${letterGrade(current)})</p>`;
+      html += `<p><strong>Target overall:</strong> ${round2(target)}% (${letterGrade(target)})</p>`;
+      html += `<p><strong>Best case if you get 100% on every upcoming grade:</strong> ${round2(best)}% (${letterGrade(best)})</p>`;
+      html += `<p><strong>Worst case if you get 0 on every upcoming grade:</strong> ${round2(worst)}% (${letterGrade(worst)})</p>`;
+
+      if (best < target) {
+        html += `<p class="warning">Even if you got 100% on every upcoming grade, you still would not reach this target.</p>`;
+      }
+      if (unlockedSolution.neededPercent === null) {
+        html += `<p class="warning">Could not solve the equal-score scenario.</p>`;
+      } else if (unlockedSolution.neededPercent > 100) {
+        html += `<p class="warning"><strong>Equal-score solution:</strong> you would need about ${round2(unlockedSolution.neededPercent)}% on every upcoming grade. That is above 100%, so this setup is probably impossible unless extra credit exists.</p>`;
+      } else if (unlockedSolution.neededPercent <= 0) {
+        html += `<p class="good"><strong>Equal-score solution:</strong> you already safely meet this target.</p>`;
+      } else {
+        html += `<p><strong>Equal-score solution:</strong> if all upcoming grades had the same percent, you would need about <strong>${round2(unlockedSolution.neededPercent)}%</strong> on each one.</p>`;
+      }
+
+      html += '<h4>Minimum score needed per slot if all other upcoming grades are 100%</h4>';
+      html += '<table><tr><th>Slot</th><th>Category</th><th>Needed Points</th><th>Needed Percent</th></tr>';
+      for (const row of singleSlot) {
+        html += `<tr>
+          <td>${escapeHtml(row.label)}</td>
+          <td>${escapeHtml(row.categoryName)}</td>
+          <td>${row.neededEarned === null ? 'Impossible' : round2(row.neededEarned) + '/' + round2(row.possible)}</td>
+          <td>${row.neededPercent === null ? 'Impossible' : round2(row.neededPercent) + '%'}</td>
+        </tr>`;
+      }
+      html += '</table>';
+
+      html += '<h4>Sample valid combinations</h4>';
+      if (!samples.length) {
+        if (classData.upcoming.length > 4) {
+          html += '<p>Too many upcoming slots for sample combination generation. Use equal-score mode instead.</p>';
+        } else {
+          html += '<p>No sample combinations from the built-in list reached the target.</p>';
+        }
+      } else {
+        html += '<table><tr><th>Combination</th><th>Projected Overall</th></tr>';
+        for (const sample of samples) {
+          const label = sample.percents.map((p, i) => `${escapeHtml(classData.upcoming[i].label || ('Slot ' + (i + 1)))}: ${p}%`).join(', ');
+          html += `<tr><td>${label}</td><td>${sample.overall}%</td></tr>`;
+        }
+        html += '</table>';
+      }
+
+      output.innerHTML = html;
+    }
+
+    renderAll();
+    loadTheme();
+  </script>
+  </div>
+</body>
+</html>

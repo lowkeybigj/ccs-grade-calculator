@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CCS Grade Calculator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-top">
+        <div>
+          <h1>CCS Grade Calculator</h1>
+          <p><strong>Made by Joshua Smith, coded by ChatGPT</strong></p>
+        </div>
+      </div>
+    </header>
+
+    <div class="theme-toggle-row">
+      <button id="themeToggle" class="theme-toggle" type="button">Dark Mode</button>
+    </div>
+
+    <section class="section">
+      <h2>Class Setup <button class="ghost-btn tutorial-btn" data-target="classSetupTutorial" type="button">Tutorial</button></h2>
+      <div id="classSetupTutorial" class="small subtle-box">Type a class name if you want to save it. Goal grade is optional. Save each class so the all-classes planner can use it.</div>
+      <div class="row">
+        <input id="className" placeholder="Class name" />
+        <input id="classGoal" type="number" step="0.01" placeholder="Goal grade (optional)" />
+        <button id="saveClassBtn" type="button">Save Class</button>
+        <button id="loadClassBtn" class="ghost-btn" type="button">Load Selected Class</button>
+        <button id="deleteClassBtn" class="danger-btn" type="button">Delete Selected Class</button>
+        <select id="savedClasses"></select>
+      </div>
+      <div class="small">Saved locally in your browser.</div>
+    </section>
+
+    <section class="section">
+      <h2>All Classes Planner <button class="ghost-btn tutorial-btn" data-target="plannerTutorial" type="button">Tutorial</button></h2>
+      <div id="plannerTutorial" class="small subtle-box">This scans your saved classes and shows the best missing assignments and corrections to raise grades. It uses assignment names and saved goal grades when available.</div>
+      <div class="row">
+        <button id="analyzeAllClassesBtn" type="button">Analyze Saved Classes</button>
+      </div>
+      <div id="allClassesOutput"></div>
+    </section>
+
+    <section class="section">
+      <h2>Paste Gradebook Import <button class="ghost-btn tutorial-btn" data-target="pasteImportTutorial" type="button">Tutorial</button></h2>
+      <div id="pasteImportTutorial" class="small subtle-box">Paste your gradebook exactly how it copies from your school page. Missing grades count as zeroes. Importing replaces your current categories and grades.</div>
+      <div class="row">
+        <textarea id="gradebookPaste" class="full-width" placeholder="Paste your gradebook here"></textarea>
+      </div>
+      <div class="row">
+        <button id="importGradebookBtn" type="button">Import Pasted Gradebook</button>
+      </div>
+      <div id="pasteImportOutput" class="small"></div>
+    </section>
+
+    <section class="section">
+      <h2>Add Category <button class="ghost-btn tutorial-btn" data-target="addCategoryTutorial" type="button">Tutorial</button></h2>
+      <div id="addCategoryTutorial" class="small subtle-box">Make one category for each type of grade. Set the weight, and if needed, a correction cap percent for that category. Grades below 70 are not correctable.</div>
+      <div class="row">
+        <input id="categoryName" placeholder="Category name" />
+        <input id="categoryWeight" type="number" step="0.01" placeholder="Weight %" />
+        <input id="categoryCorrectionCap" type="number" step="0.01" placeholder="Correction cap % (optional)" />
+        <button id="addCategoryBtn" type="button">Add Category</button>
+      </div>
+      <div id="weightStatus"></div>
+    </section>
+
+    <section class="section">
+      <h2>Categories <button class="ghost-btn tutorial-btn" data-target="categoriesTutorial" type="button">Tutorial</button></h2>
+      <div id="categoriesTutorial" class="small subtle-box">This shows all your categories and assignments. You can add assignment names, correct eligible grades, edit or delete grades, and change category rules.</div>
+      <div id="categoriesContainer"></div>
+    </section>
+
+    <section class="section">
+      <h2>Current Grade Summary <button class="ghost-btn tutorial-btn" data-target="currentSummaryTutorial" type="button">Tutorial</button></h2>
+      <div id="currentSummaryTutorial" class="small subtle-box">This shows your current grade, your letter grade, and how each category is affecting your grade.</div>
+      <div id="currentSummary"></div>
+    </section>
+
+    <section class="section">
+      <h2>Insights & Warnings <button class="ghost-btn tutorial-btn" data-target="insightsTutorial" type="button">Tutorial</button></h2>
+      <div id="insightsTutorial" class="small subtle-box">This section shows what is hurting your grade the most, whether common grade targets are still reachable, warnings about risky scores, and a small trend graph based on your assignment order.</div>
+      <div id="insightsOutput"></div>
+    </section>
+
+    <section class="section">
+      <h2>Target / Future Grade Solver <button class="ghost-btn tutorial-btn" data-target="solverTutorial" type="button">Tutorial</button></h2>
+      <div id="solverTutorial" class="small subtle-box">Use this to see what grades you need in the future. Add upcoming grades, then click Solve.</div>
+      <div class="row">
+        <input id="targetGrade" type="number" step="0.01" placeholder="Target overall grade" />
+      </div>
+
+      <h3>Upcoming Grades <button class="ghost-btn tutorial-btn" data-target="upcomingTutorial" type="button">Tutorial</button></h3>
+      <div id="upcomingTutorial" class="small subtle-box">Add a slot for each future grade. Choose its category, points possible, and optional name. You can also check Drop lowest in category if the new grade would replace the lowest grade there.</div>
+      <div class="row">
+        <select id="upcomingCategory"></select>
+        <input id="upcomingPoints" type="number" step="0.01" placeholder="Points possible" />
+        <input id="upcomingLabel" placeholder="Assignment name (optional)" />
+        <label><input id="upcomingDropLowest" type="checkbox" /> Drop lowest in category</label>
+        <button id="addUpcomingBtn" type="button">Add Upcoming Grade Slot</button>
+        <button id="clearUpcomingBtn" class="ghost-btn" type="button">Clear Upcoming Slots</button>
+      </div>
+      <div id="upcomingList"></div>
+      <div class="row">
+        <button id="solveBtn" type="button">Solve</button>
+      </div>
+
+      <h3>Lowest Safe Score <button class="ghost-btn tutorial-btn" data-target="lowestSafeTutorial" type="button">Tutorial</button></h3>
+      <div id="lowestSafeTutorial" class="small subtle-box">Use this to find the lowest score you can get on one future grade without your class grade dropping below a target.</div>
+      <div class="row">
+        <select id="safeCategory"></select>
+        <input id="safePoints" type="number" step="0.01" placeholder="Points possible" />
+        <label><input id="safeDropLowest" type="checkbox" /> Drop lowest in category</label>
+        <input id="safeTarget" type="number" step="0.01" placeholder="Minimum class grade to stay above" />
+        <button id="findSafeBtn" type="button">Find Lowest Safe Score</button>
+      </div>
+      <div id="lowestSafeOutput"></div>
+
+      <h3>Solver Results <button class="ghost-btn tutorial-btn" data-target="solverResultsTutorial" type="button">Tutorial</button></h3>
+      <div id="solverResultsTutorial" class="small subtle-box">This shows your results. It includes best case, worst case, what you need on each grade, and example score combinations.</div>
+      <div id="solverOutput"></div>
+    </section>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

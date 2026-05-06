@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CCS Grade Calculator v.14.3</title>
+  <link rel="stylesheet" href="styles.css?v=14.3" />
+  <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+  <div id="dynamicBackground" aria-hidden="true"></div>
+  <div id="dynamicBackgroundFade" aria-hidden="true"></div>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-top">
+        <div>
+          <h1 id="appTitle">CCS Grade Calculator v.14.3</h1>
+          <p><strong>Made by Joshua Smith, coded by ChatGPT</strong></p>
+        </div>
+      </div>
+    </header>
+
+    <div class="theme-toggle-row" style="display:none;"></div>
+
+      <div class="row" style="display:none;"><label for="themePreset"><strong>Theme preset</strong></label></div>
+
+
+
+    <nav class="tab-bar" id="tabBar" aria-label="Sections">
+      <button type="button" class="tab-btn active" data-tab-target="settings">Settings</button>
+      <button type="button" class="tab-btn" data-tab-target="tutorial">Tutorial</button>
+      <button type="button" class="tab-btn" data-tab-target="setup">Setup</button>
+      <button type="button" class="tab-btn" data-tab-target="planner">Planner</button>
+      <button type="button" class="tab-btn" data-tab-target="import">Import</button>
+      <button type="button" class="tab-btn" data-tab-target="category">Add Category</button>
+      <button type="button" class="tab-btn" data-tab-target="grades">Grades</button>
+      <button type="button" class="tab-btn" data-tab-target="summary">Summary</button>
+      <button type="button" class="tab-btn" data-tab-target="insights">Insights</button>
+      <button type="button" class="tab-btn" data-tab-target="report">Report</button>
+      <button type="button" class="tab-btn" data-tab-target="solver">Solver</button>
+    </nav>
+
+
+    
+
+<section class="section tab-panel" data-tab="tutorial">
+  <h2>Tutorial</h2>
+  <div class="row">
+    <button id="startTourBtn" type="button">Take a Tour</button>
+    <button class="ghost-btn tutorial-btn" data-target="tourTutorial" type="button">How do I use this?</button>
+  </div>
+  <div id="tourTutorial" class="small subtle-box">Use Take a Tour if you want the app to guide you through each major page automatically. The tour switches tabs for you, highlights important areas, and explains what each section is for.</div>
+  <p class="small">This written guide explains every major part of the calculator. Use the jump links to move around quickly, or use the tour button if you want the calculator to walk you through the app step by step.</p>
+
+  <div class="subtle-box">
+    <h3>Newer features</h3>
+    <p class="small">Settings now includes theme categories, dynamic mouse-reactive backgrounds, a glass cards toggle, density/roundness/depth controls, saturation/brightness, and animation speed controls.</p>
+    <p class="small">The Report tab can generate an AI-ready grade report with selected classes, missing work, corrections, upcoming grades, and best moves.</p>
+    <p class="small">The Take a Tour button walks through the newer visual features, report tools, and the original grade-planning tools.</p>
+  </div>
+
+
+  <div class="tutorial-links">
+    <a href="#tutorial-overview" class="tutorial-anchor-link">Overview</a>
+    <a href="#tutorial-class-setup" class="tutorial-anchor-link">Class Setup</a>
+    <a href="#tutorial-import" class="tutorial-anchor-link">Importing a Gradebook</a>
+    <a href="#tutorial-categories" class="tutorial-anchor-link">Categories</a>
+    <a href="#tutorial-grades" class="tutorial-anchor-link">Grades</a>
+    <a href="#tutorial-corrections" class="tutorial-anchor-link">Corrections</a>
+    <a href="#tutorial-insights" class="tutorial-anchor-link">Insights</a>
+    <a href="#tutorial-solver" class="tutorial-anchor-link">Solver</a>
+    <a href="#tutorial-report" class="tutorial-anchor-link">Report</a>
+    <a href="#tutorial-planner" class="tutorial-anchor-link">Planner</a>
+    <a href="#tutorial-maxgrade" class="tutorial-anchor-link">Max Possible Grade</a>
+    <a href="#tutorial-themes" class="tutorial-anchor-link">Themes</a>
+  </div>
+
+  <h3 id="tutorial-overview">Overview</h3>
+  <p>This calculator is built for category-weighted classes. That means different types of work, like assignments, quizzes, and tests, do not all affect your grade equally. Instead, each category has a weight, and the calculator uses those weights to figure out your real class average.</p>
+  <p>If your school gradebook works with categories and percentages, this calculator is meant to copy that logic as closely as possible. It can help you understand your current grade, what is dragging it down, what future scores you need, and how much your grade could improve if you fixed missing work or corrections.</p>
+
+  <h3 id="tutorial-class-setup">Class Setup</h3>
+  <p>Use Class Setup to name the class and optionally set a goal grade. Saving the class is important because the Analyzer and Planner tools only work with saved classes.</p>
+  <p><strong>What to do here:</strong> type the class name, type a goal grade if you want one, then click <strong>Save Class</strong>. If you later want to load an old class, choose it from the saved classes dropdown and click <strong>Load Selected Class</strong>.</p>
+  <p><strong>Share this class</strong> creates a link for the currently loaded class. That is useful if you want to send the setup to someone else or keep a quick copy of that one class.</p>
+
+  <h3 id="tutorial-import">Importing a Gradebook</h3>
+  <p>This is the fastest way to build a class. Paste your copied gradebook text into the import box, then click the import button. The calculator will try to detect category names, weights, assignments, missing grades, and points.</p>
+  <p>Missing grades are counted as zeroes, because that is how most gradebooks treat missing work until you turn it in. If your import looks wrong, check the Grades tab afterward and clean up anything unusual there.</p>
+  <p>This is especially useful when you have a lot of assignments and do not want to enter everything by hand.</p>
+
+  <h3 id="tutorial-categories">Categories</h3>
+  <p>Categories are the buckets that your grades go into. Common examples are Assignments, Quizzes, and Tests. Each category has a weight that tells the calculator how important that category is to the final average.</p>
+  <p>If you add categories manually, make sure the weights are realistic for your class. The calculator can still work if the weights do not add to exactly 100, but your summary will warn you if the setup looks off.</p>
+  <p>When you leave the correction cap blank, the calculator can now choose smart defaults: assignments get no cap, quizzes default to 80, and tests default to 70.</p>
+
+  <h3 id="tutorial-grades">Grades</h3>
+  <p>The Grades tab is where you actually manage the class. You can add assignments, edit assignments, delete them, mark them as missing, and apply correction settings. This is also where imported grades appear after you use the import tool.</p>
+  <p>Each assignment stores points earned and points possible. If you edit a missing assignment, you can now also set a late penalty to show what the assignment would realistically count for if you eventually turn it in late.</p>
+  <p>If you are confused why your grade looks high or low, this is usually the first page you should check.</p>
+
+  <h3 id="tutorial-corrections">Corrections</h3>
+  <p>Corrections let you model classes where low grades can be fixed up to a certain cap. For example, a corrected quiz might only be allowed to rise to 80. Correction caps are set per category.</p>
+  <p>When a grade is correction-eligible, you can turn correction on for that grade. The calculator will then use the corrected score instead of the original one. This matters in the Summary, Insights, and Planner features.</p>
+  <p>Corrections are treated as opportunities to improve existing grades. Missing work is treated separately.</p>
+
+  <h3 id="tutorial-insights">Insights</h3>
+  <p>The Insights tab tries to explain your class instead of just showing numbers. It can point out what is hurting you the most, what your weakest category is, whether your current setup is risky, and what kinds of moves help most.</p>
+  <p>This is the page to use when you want guidance, not just calculation. It is especially useful when your class has many assignments and you want to know what deserves attention first.</p>
+
+  <h3 id="tutorial-solver">Solver</h3>
+  <p>The Solver is for future work. Use it when you want to know what scores you need on assignments that are not graded yet.</p>
+  <p><strong>Upcoming Grades</strong> lets you add future assignments one by one. You choose the category, points possible, and optional label. If your teacher drops the lowest grade in a category, you can use the drop-lowest option there too.</p>
+  <p><strong>Solve</strong> estimates what scores you need across those future assignments to hit your target. This is helpful when you want to answer questions like, “What do I need on the next two quizzes to keep an A?”</p>
+  <p><strong>Lowest Safe Score</strong> answers a different question: “What is the lowest score I can get on this one assignment and still stay above a chosen grade?” This is more of a safety check than a target planner.</p>
+
+  <h3 id="tutorial-planner">Planner</h3>
+  <p>The Planner looks across saved classes instead of just the one you are currently editing. It ranks the best moves you can make, like turning in a missing assignment or correcting a low grade.</p>
+  <p>This is useful when you have several classes and you want to know where your time will matter most. Instead of guessing which assignment is most worth doing, the Planner compares the estimated gains for you.</p>
+  <p>If a class does not show useful moves, that usually means it either has no missing work, no correctable grades, or no saved correction caps.</p>
+
+  <h3 id="tutorial-maxgrade">Max Possible Grade</h3>
+  <p>The Max Possible Grade tool is in the Planner section. It lets you choose a saved class and see the highest grade you could reach if you turned in every missing assignment, got full credit on all saved upcoming work, and used every available correction.</p>
+  <p>This is a “best realistic case” tool, not a guarantee. It now also uses late penalties on missing assignments, so the result is more realistic than simply assuming every missing grade turns into a perfect score.</p>
+
+  <h3 id="tutorial-themes">Themes</h3>
+  <p>The theme dropdown changes the overall color style of the app, and the dark mode toggle changes whether you are using the light or dark version of the selected theme. Your selected theme should persist after reloads.</p>
+  <p>Themes do not affect the calculations. They are only there to make the app easier or more fun to use.</p>
+
+  <div id="tutorial-report" class="tutorial-section">
+    <h3>Report</h3>
+    <p>The Report tab creates a copy-ready grade report. Choose which saved classes to include, turn AI mode on if you want help from an assistant, add extra context, then generate and copy the report.</p>
+  </div>
+
+</section>
+<section class="section tab-panel" data-tab="setup">
+      <h2>Class Setup <button class="ghost-btn tutorial-btn" data-target="classSetupTutorial" type="button">How do I use this?</button></h2>
+      <div id="classSetupTutorial" class="small subtle-box">Type a class name if you want to save it. Goal grade is optional. Save each class so the all-classes planner can use it.</div>
+      <div class="row">
+        <input id="className" placeholder="Class name" />
+        <input id="classGoal" type="number" step="0.01" placeholder="Goal grade (optional)" />
+        <button id="saveClassBtn" type="button">Save Class</button>
+        <button id="loadClassBtn" class="ghost-btn" type="button">Load Selected Class</button>
+        <button id="deleteClassBtn" class="danger-btn" type="button">Delete Selected Class</button>
+        <select id="savedClasses"></select>
+      </div>
+      <div class="small">Saved locally in your browser.</div>
+
+      <div class="share-box">
+        <div class="small"><strong>Share this class</strong> — generate a link that loads the current class into the calculator.</div>
+        <div class="row">
+          <button id="generateShareBtn" type="button">Generate Share Link</button>
+          <button id="copyShareBtn" class="ghost-btn" type="button">Copy Link</button>
+          <input id="shareLinkOutput" class="share-link-output" readonly placeholder="Share link will appear here" />
+        </div>
+      </div>
+
+    </section>
+
+    
+    
+
+
+
+<section class="section tab-panel active" data-tab="settings">
+  <h2>Settings <button class="ghost-btn tutorial-btn" data-target="settingsTutorial" type="button">What is this?</button></h2>
+  <div id="settingsTutorial" class="small subtle-box">Visual controls live here. Pick a theme category, choose a theme, switch dark mode on or off, and customize layout/motion.</div>
+
+  <div class="settings-grid">
+    <div class="settings-card">
+      <h3>Appearance</h3>
+      <div class="settings-stack">
+        <label class="pretty-check"><input id="animationsEnabled" type="checkbox" checked> <span>Enable animations</span></label>
+        <label class="pretty-check"><input id="titleIntroEnabled" type="checkbox" checked> <span>Play title intro on refresh</span></label>
+        <label class="pretty-check"><input id="dynamicBackgroundEnabled" type="checkbox" checked> <span>Dynamic background</span></label>
+        <label class="pretty-check"><input id="glassCardsEnabled" type="checkbox"> <span>Glass cards</span></label>
+
+        <label class="pretty-check"><input id="optimizerModeEnabled" type="checkbox"> <span>Optimizer mode for low framerates</span></label>
+        <p class="small optimizer-note" id="optimizerNote">Reduces heavy blur, glow, shadows, and motion to make the calculator run smoother.</p>
+        <label class="pretty-check"><input id="gpaModeEnabled" type="checkbox"> <span>Show Summary as GPA</span></label>
+        <p class="small warning-text gpa-warning" id="gpaWarning">Warning: I am still an 8th grader and I don't really know how GPAs work yet. Keep that in mind when using this feature. Thank you :)</p>
+</div>
+      <button type="button" class="ghost-btn" data-settings-reset="appearance">Reset appearance</button>
+    </div>
+
+    <div class="settings-card settings-card-wide">
+      <h3>Themes</h3>
+      <div class="small">Choose a category, then pick the actual theme with the buttons below.</div>
+      <div class="theme-select-row">
+        <select id="themeCategorySelect" class="theme-select" aria-label="Theme category">
+          <option value="mono">Mono Themes</option>
+          <option value="mixed">Mixed Themes</option>
+          <option value="gradient">Gradient Themes</option>
+        </select>
+        <button type="button" class="ghost-btn" data-settings-reset="theme">Reset theme</button>
+      </div>
+
+      <div id="themeButtonPanels">
+        <div class="theme-button-grid theme-category-panel" data-theme-panel="mono">
+          <button type="button" class="theme-preset-btn" data-theme-preset="pure-black-amoled" data-theme-category="mono">Pure Black</button>
+          <button type="button" class="theme-preset-btn" data-theme-preset="white" data-theme-category="mono">White</button>
+          <button type="button" class="theme-preset-btn" data-theme-preset="gray" data-theme-category="mono">Gray</button>
+          <button type="button" class="theme-preset-btn" data-theme-preset="red" data-theme-category="mono">Red</button>
+          <button type="button" class="theme-preset-btn" data-theme-preset="vermillion" data-theme-category="mono">Vermillion</button>
+          <button type="button" class="theme-preset-btn" data-theme-preset="blood-orange" data-theme-category="mono">Blood Orange</button>
+          <button type="button" class="theme-preset-btn" data-theme-preset="orange" data-theme-category="mono">Orange</button>
+          <button type="button" class="theme-preset-btn" data-theme-preset="yellow" data-theme-category="mono">Yellow</button>
+          <button type="button" class="theme-preset-btn" data-theme-preset="green" data-theme-category="mono">Green</button>
+          <button type="button" class="theme-preset-btn" data-theme-preset="turquoise" data-theme-category="mono">Turquoise</button>
+          <button type="button" class="theme-preset-btn" data-theme-preset="blue" data-theme-category="mono">Blue</button>
+          <button type="button" class="theme-preset-btn" data-theme-preset="indigo" data-theme-category="mono">Indigo</button>
+          <button type="button" class="theme-preset-btn" data-theme-preset="lavender" data-theme-category="mono">Lavender</button>
+          <button type="button" class="theme-preset-btn" data-theme-preset="hot-pink" data-theme-category="mono">Hot Pink</button>
+        </div>
+        <div class="theme-button-grid theme-category-panel" data-theme-panel="mixed" hidden>
+          <button type="button" class="theme-preset-btn" data-theme-preset="ocean" data-theme-category="mixed">Ocean</button>
+          <button type="button" class="theme-preset-btn" data-theme-preset="royal-gold" data-theme-category="mixed">Royal Gold</button>
+          <button type="button" class="theme-preset-btn" data-theme-preset="forest-sepia" data-theme-category="mixed">Forest Sepia</button>
+          <button type="button" class="theme-preset-btn" data-theme-preset="cyberpunk" data-theme-category="mixed">Cyberpunk</button>
+        </div>
+        <div class="theme-button-grid theme-category-panel" data-theme-panel="gradient" hidden>
+          <button type="button" class="theme-preset-btn" data-theme-preset="aurora" data-theme-category="gradient">Aurora</button>
+          <button type="button" class="theme-preset-btn" data-theme-preset="vaporwave" data-theme-category="gradient">Vaporwave</button>
+          <button type="button" class="theme-preset-btn" data-theme-preset="oil-slick" data-theme-category="gradient">Oil Slick</button>
+          <button type="button" class="theme-preset-btn" data-theme-preset="holographic-glass" data-theme-category="gradient">Holographic Glass</button>
+        </div>
+      </div>
+
+      <p class="small" id="currentThemeLabel">Current theme: Pure Black</p>
+    </div>
+
+    <div class="settings-card">
+      <h3>Layout</h3>
+      <div class="settings-stack">
+        <label>Density</label>
+        <input id="densitySlider" type="range" min="0" max="100" value="55">
+
+        <label>Roundness</label>
+        <input id="roundnessSlider" type="range" min="0" max="100" value="65">
+
+        <label>Depth</label>
+        <input id="depthSlider" type="range" min="0" max="100" value="45">
+
+        <label>Saturation</label>
+        <input id="saturationSlider" type="range" min="0" max="100" value="100">
+
+        <label>Brightness</label>
+        <input id="brightnessSlider" type="range" min="70" max="130" value="100">
+
+        <label>Color fade speed</label>
+        <input id="colorFadeSpeedSlider" type="range" min="0" max="100" value="60">
+
+        <label>Animation speed</label>
+        <input id="animationSpeedSlider" type="range" min="0" max="100" value="60">
+
+        <button type="button" class="ghost-btn" data-settings-reset="layout">Reset layout</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+    <section class="section tab-panel" data-tab="planner">
+      <h2>All Classes Planner
+<div style="margin-top:12px; margin-bottom:12px; border:1px solid var(--line); background:var(--card-2); padding:12px; border-radius:14px;">
+  <div class="row">
+    <label><strong>Max possible grade by class <button class="ghost-btn tutorial-btn" data-target="plannerMaxGradeTutorial" type="button">What is this?</button></strong></label>
+    <select id="analyzerClassSelect"></select>
+    <button id="analyzerMaxGradeBtn">Calculate</button>
+  </div>
+  <div id="analyzerMaxGradeOutput" class="small" style="margin-top:8px;"></div>
+  <div id="plannerMaxGradeTutorial" class="small subtle-box">This shows the highest grade you could reach in a saved class if you turned in every missing assignment and used every possible correction.</div>
+</div> <button class="ghost-btn tutorial-btn" data-target="plannerTutorial" type="button">What is this?</button></h2>
+      <div class="subtle-box" style="margin-top:12px; margin-bottom:12px;">
+        <div class="row">
+          <label for="analyzerClassSelect"><strong>Max possible grade by class <button class="ghost-btn tutorial-btn" data-target="plannerMaxGradeTutorial" type="button">What is this?</button></strong></label>
+          <select id="analyzerClassSelect"></select>
+          <button id="analyzerMaxGradeBtn" type="button">Calculate</button>
+        </div>
+        <div class="small">Choose a saved class to see the highest grade you could reach if you turned in every missing assignment, got full credit on all saved upcoming work, and used every possible correction.</div>
+        <div id="analyzerMaxGradeOutput" class="small" style="margin-top:8px;"></div>
+      </div>
+      <div id="plannerTutorial" class="small subtle-box">This scans your saved classes and shows the best missing assignments and corrections to raise grades. It uses assignment names and saved goal grades when available.</div>
+      <div class="row">
+        <button id="analyzeAllClassesBtn" type="button">Analyze Saved Classes</button>
+      </div>
+      <div class="small">Nothing showing up? Try setting the correction cap in each of your categories in the grades tab.</div>
+
+      <div id="allClassesOutput"></div>
+    </section>
+
+    <section class="section tab-panel" data-tab="import">
+      <h2>Paste Gradebook Import <button class="ghost-btn tutorial-btn" data-target="pasteImportTutorial" type="button">How do I use this?</button></h2>
+      <div id="pasteImportTutorial" class="small subtle-box">Paste your gradebook exactly how it copies from your school page. Missing grades count as zeroes. Importing replaces your current categories and grades.</div>
+      <div class="row">
+        <textarea id="gradebookPaste" class="full-width" placeholder="Paste your gradebook here"></textarea>
+      </div>
+      <div class="row">
+        <button id="importGradebookBtn" type="button">Import Pasted Gradebook</button>
+      </div>
+      <div id="pasteImportOutput" class="small"></div>
+    </section>
+
+    <section class="section tab-panel" data-tab="category">
+      <h2>Add Category <button class="ghost-btn tutorial-btn" data-target="addCategoryTutorial" type="button">How do I use this?</button></h2>
+      <div id="addCategoryTutorial" class="small subtle-box">Make one category for each type of grade. Set the weight, and if needed, a correction cap percent for that category. Grades below 70 are not correctable.</div>
+      <div class="row">
+        <input id="categoryName" placeholder="Category name" />
+        <input id="categoryWeight" type="number" step="0.01" placeholder="Weight %" />
+        <input id="categoryCorrectionCap" type="number" step="0.01" placeholder="Correction cap % (optional)" />
+        <button id="addCategoryBtn" type="button">Add Category</button>
+      </div>
+      <div id="weightStatus"></div>
+    </section>
+
+    <section class="section tab-panel" data-tab="grades">
+      <h2>Categories <button class="ghost-btn tutorial-btn" data-target="categoriesTutorial" type="button">How do I use this?</button></h2>
+      <div id="categoriesTutorial" class="small subtle-box">This shows all your categories and assignments. You can add assignment names, correct eligible grades, edit or delete grades, and change category rules.</div>
+      <div id="categoriesContainer"></div>
+    </section>
+
+    <section class="section tab-panel" data-tab="summary">
+      <h2>Current Grade Summary <button class="ghost-btn tutorial-btn" data-target="currentSummaryTutorial" type="button">What is this?</button></h2>
+      <div id="currentSummaryTutorial" class="small subtle-box">This shows your current grade, your letter grade, and how each category is affecting your grade.</div>
+      <div id="currentSummary"></div>
+    </section>
+
+    <section class="section tab-panel" data-tab="insights">
+      <h2>Insights & Warnings <button class="ghost-btn tutorial-btn" data-target="insightsTutorial" type="button">What is this?</button></h2>
+      <div id="insightsTutorial" class="small subtle-box">This section shows what is hurting your grade the most, whether common grade targets are still reachable, and warnings about risky scores.</div>
+      <div class="row"><select id="insightsClassSelect"></select></div>
+      <div id="insightsOutput"></div>
+    </section>
+
+    
+<section class="section tab-panel" data-tab="report">
+  <h2>Grade Report</h2>
+  <p class="small">Generate a copy-ready report for yourself, a parent, a teacher, or an AI assistant. The report uses saved classes plus the current class.</p>
+
+  <div class="settings-grid report-controls-grid">
+    <div class="settings-card">
+      <h3>Classes to include</h3>
+      <div class="small">Save classes first if you want them to appear here.</div>
+      <div id="reportClassChecklist" class="report-checklist"></div>
+      <div class="row">
+        <button type="button" class="ghost-btn" id="reportSelectAllBtn">Select all</button>
+        <button type="button" class="ghost-btn" id="reportClearAllBtn">Clear all</button>
+      </div>
+    </div>
+
+    <div class="settings-card">
+      <h3>Report settings</h3>
+      <div class="settings-stack">
+        <label class="pretty-check"><input id="reportIncludeCurrent" type="checkbox" checked> <span>Include current unsaved class</span></label>
+        <label class="pretty-check"><input id="reportAiMode" type="checkbox" checked> <span>Full AI mode</span></label>
+        <label class="pretty-check"><input id="reportIncludeAssignments" type="checkbox" checked> <span>Include assignments</span></label>
+        <label class="pretty-check"><input id="reportIncludeMissing" type="checkbox" checked> <span>Include missing work</span></label>
+        <label class="pretty-check"><input id="reportIncludeCorrections" type="checkbox" checked> <span>Include possible corrections</span></label>
+        <label class="pretty-check"><input id="reportIncludeUpcoming" type="checkbox" checked> <span>Include upcoming grades</span></label>
+        <label class="pretty-check"><input id="reportIncludeBestMoves" type="checkbox" checked> <span>Include best moves / max grade plan</span></label>
+      </div>
+    </div>
+
+    <div class="settings-card settings-card-wide">
+      <h3>Extra context for AI mode</h3>
+      <p class="small">Optional. Add details like deadlines, energy level, teacher rules, what you want help with, or what kind of plan you need.</p>
+      <textarea id="reportExtraContext" rows="5" placeholder="Example: I have low motivation and can only work in 10-minute chunks. I want the easiest plan to raise my grades first."></textarea>
+    </div>
+  </div>
+
+  <div class="row">
+    <button type="button" id="generateReportBtn">Generate Report</button>
+    <button type="button" class="ghost-btn" id="copyReportBtn">Copy Report</button>
+    <button type="button" class="ghost-btn" id="clearReportBtn">Clear</button>
+  </div>
+
+  <textarea id="gradeReportOutput" class="report-output" rows="22" placeholder="Your report will appear here."></textarea>
+</section>
+
+<section class="section tab-panel" data-tab="solver">
+      <h2>Target / Future Grade Solver <button class="ghost-btn tutorial-btn" data-target="solverTutorial" type="button">How do I use this?</button></h2>
+      <div id="solverTutorial" class="small subtle-box">Use this to see what grades you need in the future. Add upcoming grades, then click Solve.</div>
+      <div class="row">
+        <input id="targetGrade" type="number" step="0.01" placeholder="Target overall grade" />
+      </div>
+
+      <h3>Upcoming Grades <button class="ghost-btn tutorial-btn" data-target="upcomingTutorial" type="button">How do I use this?</button></h3>
+      <div id="upcomingTutorial" class="small subtle-box">Add a slot for each future grade. Choose its category, points possible, and optional name. You can also check Drop lowest in category if the new grade would replace the lowest grade there. If a saved upcoming assignment has effectively become missing, use the Missing option so the max-grade tool does not assume you will get 100% on it.</div>
+      <div class="row">
+        <label for="upcomingCategory"><strong>Category</strong></label>
+        <select id="upcomingCategory"></select>
+        <input id="upcomingPoints" type="number" step="0.01" placeholder="Points possible" />
+        <input id="upcomingLabel" placeholder="Assignment name (optional)" />
+        <label><input id="upcomingDropLowest" type="checkbox" /> Drop lowest in category</label>
+                <label for="upcomingLatePenalty"><strong>Late penalty</strong></label>
+        <select id="upcomingLatePenalty">
+          <option value="1">On time (no penalty)</option>
+          <option value="0.9">1 day late (-10%)</option>
+          <option value="0.8">2 days late (-20%)</option>
+          <option value="0.65">3+ days late (-35%)</option>
+          <option value="0">Unredeemable (0%)</option>
+        </select>
+        <button id="addUpcomingBtn" type="button">Add Upcoming Grade Slot</button>
+        <button id="clearUpcomingBtn" class="ghost-btn" type="button">Clear Upcoming Slots</button>
+      </div>
+      <div id="upcomingList"></div>
+      <div class="row">
+        <button id="solveBtn" type="button">Solve</button>
+      </div>
+
+      <h3>Lowest Safe Score <button class="ghost-btn tutorial-btn" data-target="lowestSafeTutorial" type="button">How do I use this?</button></h3>
+      <div id="lowestSafeTutorial" class="small subtle-box">Use this to find the lowest score you can get on one future grade without your class grade dropping below a target.</div>
+      <div class="row">
+        <label for="safeCategory"><strong>Category</strong></label>
+        <select id="safeCategory"></select>
+        <input id="safePoints" type="number" step="0.01" placeholder="Points possible" />
+        <label><input id="safeDropLowest" type="checkbox" /> Drop lowest in category</label>
+        <input id="safeTarget" type="number" step="0.01" placeholder="Minimum class grade to stay above" />
+        <button id="findSafeBtn" type="button">Find Lowest Safe Score</button>
+      </div>
+      <div id="lowestSafeOutput"></div>
+
+      <h3>Solver Results <button class="ghost-btn tutorial-btn" data-target="solverResultsTutorial" type="button">What is this?</button></h3>
+      <div id="solverResultsTutorial" class="small subtle-box">This shows your results. It includes best case, worst case, what you need on each grade, and example score combinations.</div>
+      <div id="solverOutput"></div>
+    </section>
+  </div>
+
+  
+  <script>
+    window.__CCS_DIAG__ = { htmlLoaded: true, jsLoaded: false, bindingsLoaded: false, themeLoaded: false };
+  </script>
+
+  <script src="script.js?v=14.3"></script>
+  <canvas id="confettiCanvas"></canvas>
+  <div id="toastContainer"></div>
+
+  <div id="tourOverlay" class="tour-overlay" aria-hidden="true">
+    <div class="tour-backdrop"></div>
+    <div id="tourCard" class="tour-card" role="dialog" aria-modal="true" aria-label="Guided tour">
+      <div class="tour-step">Step <span id="tourStepNumber">1</span> of <span id="tourStepTotal">1</span></div>
+      <h3 id="tourTitle">Tour</h3>
+      <p id="tourText">Welcome.</p>
+      <div class="tour-actions">
+        <button id="tourBackBtn" type="button" class="ghost-btn">Back</button>
+        <button id="tourNextBtn" type="button">Next</button>
+        <button id="tourSkipBtn" type="button" class="ghost-btn">Skip</button>
+      </div>
+    </div>
+  </div>
+
+
+<div id="undoToast" class="undo-toast" style="display:none;">
+  <span id="undoToastText">Deleted.</span>
+  <button id="undoDeleteBtn" type="button">Undo delete</button>
+</div>
+</body>
+</html>
